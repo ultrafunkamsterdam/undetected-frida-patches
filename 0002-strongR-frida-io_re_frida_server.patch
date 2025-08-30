@@ -1,14 +1,14 @@
-From aafd3e9f938e6e94d6b181718b0c2d85192168b4 Mon Sep 17 00:00:00 2001
-From: hluwa <hluwa888@gmail.com>
-Date: Mon, 16 Aug 2021 10:55:11 +0800
-Subject: [PATCH 2/8] strongR-frida: io_re_frida_server
+From e120fe5b6bc03ed5f00de5f3e219329037ec46de Mon Sep 17 00:00:00 2001
+From: Leon <ultrafunkamsterdam@users.noreply.github.com>
+Date: Sat, 30 Aug 2025 18:03:02 +0200
+Subject: [PATCH] Update server.vala
 
 ---
  server/server.vala | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/server/server.vala b/server/server.vala
-index e2d1b66d..42c86739 100644
+index 67bf4b381..593b08114 100644
 --- a/server/server.vala
 +++ b/server/server.vala
 @@ -1,7 +1,7 @@
@@ -16,11 +16,11 @@ index e2d1b66d..42c86739 100644
  	private static Application application;
  
 -	private const string DEFAULT_DIRECTORY = "re.frida.server";
-+	private static string DEFAULT_DIRECTORY = null;
++	private const string DEFAULT_DIRECTORY = null;
  	private static bool output_version = false;
+ 	private static string? device_id = null;
  	private static string? listen_address = null;
- 	private static string? certpath = null;
-@@ -50,6 +50,7 @@ namespace Frida.Server {
+@@ -52,6 +52,7 @@ namespace Frida.Server {
  	};
  
  	private static int main (string[] args) {
@@ -28,6 +28,3 @@ index e2d1b66d..42c86739 100644
  		Environment.init ();
  
  #if DARWIN
--- 
-2.30.2
-
