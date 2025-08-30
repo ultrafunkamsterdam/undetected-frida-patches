@@ -1,80 +1,41 @@
-From 65976afd602808c55a5d832f469cd4db245a8304 Mon Sep 17 00:00:00 2001
-From: heyang <375525827@qq.com>
-Date: Mon, 24 Oct 2022 15:41:12 +0800
-Subject: [PATCH 5/8] strongR-frida: symbol_frida_agent_main
+From 083c414bc0f1677dc11434a852b7c7ee0927f60a Mon Sep 17 00:00:00 2001
+From: Leon <ultrafunkamsterdam@users.noreply.github.com>
+Date: Sat, 30 Aug 2025 18:55:31 +0200
+Subject: [PATCH 1/6] Update agent-container.vala
 
 ---
- src/agent-container.vala              |  2 +-
- src/anti-anti-frida.py                | 21 +++++++++++++++++++++
- src/darwin/darwin-host-session.vala   |  2 +-
- src/freebsd/freebsd-host-session.vala |  2 +-
- src/linux/linux-host-session.vala     |  2 +-
- src/qnx/qnx-host-session.vala         |  2 +-
- src/windows/windows-host-session.vala |  2 +-
- tests/test-agent.vala                 |  2 +-
- tests/test-injector.vala              |  2 +-
- 9 files changed, 29 insertions(+), 8 deletions(-)
- create mode 100644 src/anti-anti-frida.py
+ src/agent-container.vala | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/agent-container.vala b/src/agent-container.vala
-index 33852c70..21320ac2 100644
+index eecfa1f69..4e71b6ecf 100644
 --- a/src/agent-container.vala
 +++ b/src/agent-container.vala
-@@ -20,7 +20,7 @@ namespace Frida {
- 			assert (container.module != null);
+@@ -28,7 +28,8 @@ namespace Frida {
+ 			}
  
  			void * main_func_symbol;
 -			var main_func_found = container.module.symbol ("frida_agent_main", out main_func_symbol);
 +			var main_func_found = container.module.symbol ("main", out main_func_symbol);
++
  			assert (main_func_found);
  			container.main_impl = (AgentMainFunc) main_func_symbol;
  
-diff --git a/src/anti-anti-frida.py b/src/anti-anti-frida.py
-new file mode 100644
-index 00000000..cc4e464d
---- /dev/null
-+++ b/src/anti-anti-frida.py
-@@ -0,0 +1,21 @@
-+import lief
-+import sys
-+import random
-+import os
-+if __name__ == "__main__":
-+    input_file = sys.argv[1]
-+    print(f"[*] Patch frida-agent: {input_file}")
-+    random_name = "".join(random.sample("ABCDEFGHIJKLMNO", 5))
-+    print(f"[*] Patch `frida` to `{random_name}``")
-+    binary = lief.parse(input_file)
-+    if not binary:
-+        exit()
-+    for symbol in binary.symbols:
-+        if symbol.name == "frida_agent_main":
-+            symbol.name = "main"
-+        
-+        if "frida" in symbol.name:
-+            symbol.name = symbol.name.replace("frida", random_name)
-+        if "FRIDA" in symbol.name:
-+            symbol.name = symbol.name.replace("FRIDA", random_name)
-+    binary.write(input_file)
-\ No newline at end of file
-diff --git a/src/darwin/darwin-host-session.vala b/src/darwin/darwin-host-session.vala
-index 2e9c010b..a4a6d197 100644
---- a/src/darwin/darwin-host-session.vala
-+++ b/src/darwin/darwin-host-session.vala
-@@ -354,7 +354,7 @@ namespace Frida {
- 		private async uint inject_agent (uint pid, string agent_parameters, Cancellable? cancellable) throws Error, IOError {
- 			uint id;
- 
--			unowned string entrypoint = "frida_agent_main";
-+			unowned string entrypoint = "main";
- #if HAVE_EMBEDDED_ASSETS
- 			id = yield fruitjector.inject_library_resource (pid, agent, entrypoint, agent_parameters, cancellable);
- #else
+
+From be1c70847c71885039e59704b66396b9a0d8d89e Mon Sep 17 00:00:00 2001
+From: Leon <ultrafunkamsterdam@users.noreply.github.com>
+Date: Sat, 30 Aug 2025 18:57:21 +0200
+Subject: [PATCH 2/6] Update freebsd-host-session.vala
+
+---
+ src/freebsd/freebsd-host-session.vala | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/src/freebsd/freebsd-host-session.vala b/src/freebsd/freebsd-host-session.vala
-index a2204a4e..eac16116 100644
+index 245747abf..3cd11aff9 100644
 --- a/src/freebsd/freebsd-host-session.vala
 +++ b/src/freebsd/freebsd-host-session.vala
-@@ -197,7 +197,7 @@ namespace Frida {
+@@ -132,7 +132,7 @@ namespace Frida {
  
  			var stream_request = Pipe.open (t.local_address, cancellable);
  
@@ -83,24 +44,44 @@ index a2204a4e..eac16116 100644
  				make_agent_parameters (pid, t.remote_address, options), cancellable);
  			injectee_by_pid[pid] = id;
  
+
+From d898638226d3f79f92480b364e81f41217485261 Mon Sep 17 00:00:00 2001
+From: Leon <ultrafunkamsterdam@users.noreply.github.com>
+Date: Sat, 30 Aug 2025 18:58:41 +0200
+Subject: [PATCH 3/6] Update linux-host-session.vala
+
+---
+ src/linux/linux-host-session.vala | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/src/linux/linux-host-session.vala b/src/linux/linux-host-session.vala
-index fa67e3fb..b935ce5d 100644
+index 9a3196177..35ca7991d 100644
 --- a/src/linux/linux-host-session.vala
 +++ b/src/linux/linux-host-session.vala
-@@ -421,7 +421,7 @@ namespace Frida {
- 			var stream_request = Pipe.open (t.local_address, cancellable);
- 
+@@ -362,7 +362,7 @@ namespace Frida {
+ 		protected override async Future<IOStream> perform_attach_to (uint pid, HashTable<string, Variant> options,
+ 				Cancellable? cancellable, out Object? transport) throws Error, IOError {
  			uint id;
 -			string entrypoint = "frida_agent_main";
 +			string entrypoint = "main";
- 			string agent_parameters = make_agent_parameters (pid, t.remote_address, options);
- 			var linjector = injector as Linjector;
- #if HAVE_EMBEDDED_ASSETS
+ 			string parameters = make_agent_parameters (pid, "", options);
+ 			AgentFeatures features = CONTROL_CHANNEL;
+ 			var linjector = (Linjector) injector;
+
+From 07e549dc627a5c913bca165da7cd36dd7ee7616e Mon Sep 17 00:00:00 2001
+From: Leon <ultrafunkamsterdam@users.noreply.github.com>
+Date: Sat, 30 Aug 2025 18:59:19 +0200
+Subject: [PATCH 4/6] Update qnx-host-session.vala
+
+---
+ src/qnx/qnx-host-session.vala | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/src/qnx/qnx-host-session.vala b/src/qnx/qnx-host-session.vala
-index 69f2995f..a4e59ab2 100644
+index 7d5b3e510..3d7fb9827 100644
 --- a/src/qnx/qnx-host-session.vala
 +++ b/src/qnx/qnx-host-session.vala
-@@ -182,7 +182,7 @@ namespace Frida {
+@@ -117,7 +117,7 @@ namespace Frida {
  
  			var stream_request = Pipe.open (t.local_address, cancellable);
  
@@ -109,11 +90,21 @@ index 69f2995f..a4e59ab2 100644
  				make_agent_parameters (pid, t.remote_address, options), cancellable);
  			injectee_by_pid[pid] = id;
  
+
+From 28f750ef303495ff6b5b740015ada13eb6078c9d Mon Sep 17 00:00:00 2001
+From: Leon <ultrafunkamsterdam@users.noreply.github.com>
+Date: Sat, 30 Aug 2025 19:00:43 +0200
+Subject: [PATCH 5/6] Update windows-host-session.vala
+
+---
+ src/windows/windows-host-session.vala | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/src/windows/windows-host-session.vala b/src/windows/windows-host-session.vala
-index 67f1f3ef..518cd256 100644
+index 1f9c32eb3..cb452ca54 100644
 --- a/src/windows/windows-host-session.vala
 +++ b/src/windows/windows-host-session.vala
-@@ -274,7 +274,7 @@ namespace Frida {
+@@ -225,7 +225,7 @@ namespace Frida {
  			var stream_request = Pipe.open (t.local_address, cancellable);
  
  			var winjector = injector as Winjector;
@@ -122,32 +113,28 @@ index 67f1f3ef..518cd256 100644
  				make_agent_parameters (pid, t.remote_address, options), cancellable);
  			injectee_by_pid[pid] = id;
  
-diff --git a/tests/test-agent.vala b/tests/test-agent.vala
-index 7482ff7b..22fbc62c 100644
---- a/tests/test-agent.vala
-+++ b/tests/test-agent.vala
-@@ -444,7 +444,7 @@ Interceptor.attach(Module.getExportByName('libsystem_kernel.dylib', 'open'), ()
- 			assert_nonnull (module);
- 
- 			void * main_func_symbol;
--			var main_func_found = module.symbol ("frida_agent_main", out main_func_symbol);
-+			var main_func_found = module.symbol ("main", out main_func_symbol);
- 			assert_true (main_func_found);
- 			main_impl = (AgentMainFunc) main_func_symbol;
- 
+
+From a28bba45656e4e243d69347cc42a84c3653c5e61 Mon Sep 17 00:00:00 2001
+From: Leon <ultrafunkamsterdam@users.noreply.github.com>
+Date: Sat, 30 Aug 2025 19:02:28 +0200
+Subject: [PATCH 6/6] Update test-injector.vala
+
+---
+ tests/test-injector.vala | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 diff --git a/tests/test-injector.vala b/tests/test-injector.vala
-index 87e435ef..79df38ff 100644
+index 23f3c6c2f..3fb3fba2a 100644
 --- a/tests/test-injector.vala
 +++ b/tests/test-injector.vala
-@@ -255,7 +255,7 @@ namespace Frida.InjectorTest {
+@@ -257,8 +257,8 @@ namespace Frida.InjectorTest {
+ 			try {
  				var path = Frida.Test.Labrats.path_to_library (name, arch);
  				assert_true (FileUtils.test (path, FileTest.EXISTS));
- 
+-
 -				yield injector.inject_library_file (process.id, path, "frida_agent_main", data);
 +				yield injector.inject_library_file (process.id, path, "main", data);
++				
  			} catch (GLib.Error e) {
  				printerr ("\nFAIL: %s\n\n", e.message);
  				assert_not_reached ();
--- 
-2.21.0 (Apple Git-122)
-
