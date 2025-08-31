@@ -38,6 +38,4 @@ index 3695ba8c..02602abf 100644
  				return false;
  
  			var request_id_value = rpc_message.get_element (1);
--- 
-2.30.2
 
