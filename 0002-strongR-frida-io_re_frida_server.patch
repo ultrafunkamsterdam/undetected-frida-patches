@@ -13,7 +13,7 @@ index 789243af..7befec24 100644
                          try:
                              probe_c.write("int main (void) { return 0; }")
                              probe_c.flush()
-                             
+
 diff --git a/server/server.vala b/server/server.vala
 index 67bf4b38..252d4b9d 100644
 --- a/server/server.vala
@@ -35,7 +35,7 @@ index 67bf4b38..252d4b9d 100644
 +                DEFAULT_DIRECTORY = GLib.Uuid.string_random();
                 Environment.init ();
 
-#if DARWIN
+ #if DARWIN
 
 diff --git a/src/api/generate.py b/src/api/generate.py
 index fd26a800..52643f6c 100644
