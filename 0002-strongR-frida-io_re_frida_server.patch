@@ -1,35 +1,40 @@
-From e120fe5b6bc03ed5f00de5f3e219329037ec46de Mon Sep 17 00:00:00 2001
-From: Leon <ultrafunkamsterdam@users.noreply.github.com>
-Date: Sat, 30 Aug 2025 18:03:02 +0200
-Subject: [PATCH] Update server.vala
-
----
- 
- diff --git a/server/server.vala b/server/server.vala
- index 593b0811..9ee04707 100644
- --- a/server/server.vala
- +++ b/server/server.vala
- @@ -1,7 +1,7 @@
+diff --git a/compat/build.py b/compat/build.py
+index 789243af..7befec24 100644
+--- a/compat/build.py
++++ b/compat/build.py
+@@ -157,8 +157,8 @@ def setup(role: Role,
+                 other_triplet = "i686-linux-gnu"
+                 have_toolchain = shutil.which(other_triplet + "-gcc") is not None
+                 if not have_toolchain:
+-                    with (tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".c") as probe_c,
+-                          tempfile.NamedTemporaryFile(delete=False) as probe_executable):
++                    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".c") as probe_c,
++                          tempfile.NamedTemporaryFile(delete=False) as probe_executable:
+                         try:
+                             probe_c.write("int main (void) { return 0; }")
+                             probe_c.flush()
+diff --git a/server/server.vala b/server/server.vala
+index 67bf4b38..252d4b9d 100644
+--- a/server/server.vala
++++ b/server/server.vala
+@@ -1,7 +1,7 @@
  namespace Frida.Server {
         private static Application application;
-
--       private const string DEFAULT_DIRECTORY = null;
-+       private static string DEFAULT_DIRECTORY = null ;
+-
+-       private const string DEFAULT_DIRECTORY = "re.frida.server";
++
++       private static string DEFAULT_DIRECTORY = null
         private static bool output_version = false;
         private static string? device_id = null;
         private static string? listen_address = null;
-@@ -52,7 +52,8 @@ namespace Frida.Server {
+@@ -52,6 +52,7 @@ namespace Frida.Server {
         };
 
         private static int main (string[] args) {
--               DEFAULT_DIRECTORY = GLib.Uuid.string_random();
 +                DEFAULT_DIRECTORY = GLib.Uuid.string_random();
-+
                 Environment.init ();
 
  #if DARWIN
-
-
 diff --git a/src/api/generate.py b/src/api/generate.py
 index fd26a800..52643f6c 100644
 --- a/src/api/generate.py
