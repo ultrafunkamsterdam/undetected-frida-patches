@@ -7,7 +7,7 @@ index 67bf4b38..37fe74eb 100644
  	private static Application application;
  
 -	private const string DEFAULT_DIRECTORY = "re.frida.server";
-+	private static string DEFAULT_DIRECTORY = null
++	private static string DEFAULT_DIRECTORY = null;
  	private static bool output_version = false;
  	private static string? device_id = null;
  	private static string? listen_address = null;
