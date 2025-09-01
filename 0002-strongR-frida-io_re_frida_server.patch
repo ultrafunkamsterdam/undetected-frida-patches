@@ -4,27 +4,27 @@ Date: Sat, 30 Aug 2025 18:03:02 +0200
 Subject: [PATCH] Update server.vala
 
 ---
- server/server.vala | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/server/server.vala b/server/server.vala
-index 67bf4b381..593b08114 100644
---- a/server/server.vala
-+++ b/server/server.vala
-@@ -1,7 +1,7 @@
+ 
+ diff --git a/server/server.vala b/server/server.vala
+ index 593b0811..9ee04707 100644
+ --- a/server/server.vala
+ +++ b/server/server.vala
+ @@ -1,7 +1,7 @@
  namespace Frida.Server {
- 	private static Application application;
- 
--	private const string DEFAULT_DIRECTORY = "re.frida.server";
-+	private const string DEFAULT_DIRECTORY = null;
- 	private static bool output_version = false;
- 	private static string? device_id = null;
- 	private static string? listen_address = null;
-@@ -52,6 +52,7 @@ namespace Frida.Server {
- 	};
- 
- 	private static int main (string[] args) {
-+		DEFAULT_DIRECTORY = GLib.Uuid.string_random();
- 		Environment.init ();
- 
+        private static Application application;
+
+-       private const string DEFAULT_DIRECTORY = null;
++       private static string DEFAULT_DIRECTORY = null ;
+        private static bool output_version = false;
+        private static string? device_id = null;
+        private static string? listen_address = null;
+@@ -52,7 +52,8 @@ namespace Frida.Server {
+        };
+
+        private static int main (string[] args) {
+-               DEFAULT_DIRECTORY = GLib.Uuid.string_random();
++                DEFAULT_DIRECTORY = GLib.Uuid.string_random();
++
+                Environment.init ();
+
  #if DARWIN
