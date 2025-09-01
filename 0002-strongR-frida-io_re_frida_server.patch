@@ -28,3 +28,22 @@ Subject: [PATCH] Update server.vala
                 Environment.init ();
 
  #if DARWIN
+
+
+diff --git a/src/api/generate.py b/src/api/generate.py
+index fd26a800..52643f6c 100644
+--- a/src/api/generate.py
++++ b/src/api/generate.py
+@@ -247,8 +247,10 @@ def emit_gir(api: ApiSpec, core_gir: str, base_gir: str, output_dir: Path) -> st
+     merge_and_transform_elements("class", object_type_names)
+     merge_and_transform_elements("interface", object_type_names)
+     merge_and_transform_elements("enumeration", enum_type_names | error_type_names)
+-
+-    ET.indent(merged_root, space="  ")
++    try:
++        ET.indent(merged_root, space="  ")
++    except:
++        pass
+     result = ET.tostring(merged_root,
+                          encoding="unicode",
+                          xml_declaration=True)
